@@ -26,7 +26,22 @@ function renderButtons(){
 function displayBandGif(){
 	var band = $(this).attr("data-name");
 	var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=479dcfc1a5af4da3b18dc91c86802588&q=" + band + "&limit=10";
+    $('#bandGif').on("click", function() {
+      var state = $(this).attr("data-state");
+      var animate = $(this).attr("data-animate")
+      var still = $(this).attr("src", $(this).attr("data-still"));
+
+
+      if (state === "still") {
+        $(this).attr("src", animate );
+        $(this).attr("data-state", "animate");
+      } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
+    });
 	$('#bands').empty();
+
 
 	$.ajax({
 		url: queryURL,
@@ -43,9 +58,10 @@ function displayBandGif(){
 		var ratDisplay = $("<p>").text("Rating: " + rating);
 
 		
-		var bandImage = $('<img>');
-		bandImage.attr("src", results[i].images.fixed_height.url);
+		var bandImage = $('<img id="bandGif">');
+		bandImage.attr("src", results[i].images.fixed_height_still.url);
 
+      console.log("this!" + this.state)
 		bandsDiv.append(ratDisplay);
 		bandsDiv.append(bandImage);
 
@@ -55,6 +71,7 @@ function displayBandGif(){
 	})
 };
 
+$('body').on("click", ".band", displayBandGif);
 
 
 //function to handle button clicks & adding more bands
@@ -66,6 +83,9 @@ $('#addBand').on("click", function(event){
 	renderButtons();
 })
 
-$(document).on("click", ".band", displayBandGif);
+//make gif animate/go back to still on click
+
+
 
 renderButtons();
+	
